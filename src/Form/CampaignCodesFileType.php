@@ -14,7 +14,6 @@ class CampaignCodesFileType extends AbstractType
          $builder
             ->add('csvcodesfile', VichImageType::class, array(
                 'required'      => true,
-                //'mapped'       => 'product',
                 'allow_delete'  => true,
                 'label' => 'CSV file'
             ))

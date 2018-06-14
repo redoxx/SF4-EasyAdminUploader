@@ -194,4 +194,12 @@ class CodesCsvFile
     {
         $this->createdAt = new \DateTime();
     }
+
+    /** 
+     * @ORM\PostPersist 
+     */
+    public function uploadCsvS3AWS()
+    {
+        
+    }
 }
