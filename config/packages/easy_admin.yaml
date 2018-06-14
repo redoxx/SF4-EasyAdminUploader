@@ -1,0 +1,49 @@
+easy_admin:
+    entities:
+        Campaign:
+            class: App\Entity\Campaign
+            help: 'Global help message displayed in all views'
+            label: 'Campaign'
+            form:
+                title: 'Add/Edit Campaign'
+                fields: 
+                   - { property: 'title', label: 'Title', css_class: 'input-large' }
+                   - { property: 's_date', label: 'Begin at', icon: 'date', type_options: { widget: 'single_text' } }
+                   - { property: 'e_date', label: 'End at', icon: 'date', type_options: { widget: 'single_text', required: false } }
+                   #- { property: 'codesFiles', label: 'Codes CSV', type: 'Vich\UploaderBundle\Form\Type\VichFileType' }
+                   - { property: 'codesFiles', type: 'collection', type_options: { entry_type: 'App\Form\CampaignCodesFileType', by_reference: false }}
+                   - { property: 'promotext', label: 'Promo text', type: 'FOS\CKEditorBundle\Form\Type\CKEditorType' }
+                   - { property: 'imageFile', type: 'vich_image', label: 'Header Image' } #'Vich\UploaderBundle\Form\Type\VichImageType'
+                   - { property: 'draft', label: 'Is draft'}
+                   - { property: 'enabled', label: 'Is enabled'}
+            
+            edit:
+                title: '%%entity_label%%_edit'
+            new:
+                title: 'New %%entity_label%%'
+            list:
+                fields: 
+                   - { property: 'title', label: 'Title'}
+                   - { property: 's_date', label: 'Begin at'}
+                   - { property: 'e_date', label: 'End at'}
+                   - { property: 'draft', label: 'Is draft'}
+                   - { property: 'enabled', label: 'Is enabled'}
+
+        CodesCsvFile:
+            class: App\Entity\CodesCsvFile
+            help: 'Import CSV & insert codes list into DynamoDB'
+            label: 'CSV CodesFile'
+            form:
+                title: 'Add/Edit CSV CodesFile'
+                fields: 
+                   - { property: 'campaign', label: 'Campaign'}
+                   - { property: 'csvcodesfile', label: 'CSV File', type: 'Vich\UploaderBundle\Form\Type\VichFileType' }
+            
+            edit:
+                title: '%%entity_label%%_edit'
+            new:
+                title: 'New %%entity_label%%'
+        BlackListIp:
+            class: App\Entity\BlackListIp
+        Code:
+            class: App\Entity\Code

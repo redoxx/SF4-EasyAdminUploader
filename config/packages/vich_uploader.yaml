@@ -1,0 +1,18 @@
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        product_images:
+            uri_prefix: '%app.path.product_images%'
+            upload_destination: '%kernel.root_dir%/../public/uploads/images/products'
+        campaign_images:
+            uri_prefix: '%app.path.campaign_images%'
+            upload_destination: '%kernel.root_dir%/../public/uploads/images/campaigns'
+        campaign_codes:
+            uri_prefix: '%app.path.campaign_codes%'
+            upload_destination: '%kernel.root_dir%/../public/uploads/campaigns/import-codes'
+
+    #mappings:
+    #    products:
+    #        uri_prefix: /images/products
+    #        upload_destination: '%kernel.project_dir%/public/images/products'
