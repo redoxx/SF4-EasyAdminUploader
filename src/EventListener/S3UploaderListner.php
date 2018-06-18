@@ -15,12 +15,12 @@ class S3UploaderListner
     {
         $entity = $args->getEntity();
         $em = $args->getEntityManager();
-  var_dump($entity);die;
+
         if ($entity instanceof CodesCsvFile) 
         {
-            //
-            var_dump($entity);
-        	throw new \Exception('Upload action');
+            //Upload file codes to AWS S3 server
+            //var_dump($entity);
+        	//throw new \Exception('Upload action');
         }
     }
 }
