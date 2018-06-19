@@ -5,6 +5,8 @@ parameters:
     app.path.product_images: /uploads/images/products
     app.path.campaign_images: /uploads/images/campaigns
     app.path.campaign_codes: /uploads/campaigns/import-codes
+    aws.credentials.key: "%env(AWS_KEY)%"
+    aws.credentials.secret: "%env(AWS_SECRET)%"
 
 services:
     # default configuration for services in *this* file
@@ -30,5 +32,8 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     App\EventListener\S3UploaderListner:
+        arguments: ['%aws.credentials.key%','%aws.credentials.secret%']
+        #arguments: ["@=container.getParameter('aws.credentials.key')", "@=container.getParameter('aws.credentials.secret')"]
+        #arguments: ["%env(AWS_KEY)%", "%env(AWS_SECRET)%"]
         tags:
             - { name: doctrine.event_listener, event: postPersist }

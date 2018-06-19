@@ -4,13 +4,12 @@ namespace App\Controller;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AdminController as EasyAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-//use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class AdminController extends EasyAdminController
 {
     /**
-     * @Route("/", name="easyadmin")
+     * @Route("/admin", name="easyadmin")
      */
     public function indexAction(Request $request)
     {
