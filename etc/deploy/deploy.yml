@@ -1,0 +1,21 @@
+---
+-
+  name: Deploy Application
+  hosts: all
+  gather_facts: false
+  vars:
+        ansistrano_deploy_from: "{{ playbook_dir }}/../../"
+        ansistrano_deploy_to: "{{ deploy_to }}"
+        ansistrano_keep_releases: 3
+        ansistrano_deploy_via: "git"
+        ansistrano_git_repo: git@gitlab.com:organization/project.git
+        ansistrano_shared_paths:
+             - var/logs
+             - var/sessions
+        ansistrano_shared_files:
+             - app/config/parameters.yml
+        symfony_console_path: 'bin/console'
+        symfony_run_assetic_dump: false
+        symfony_run_doctrine_migrations: true
+        roles:
+            - { role: cbrunnkvist.ansistrano-symfony-deploy }

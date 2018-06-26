@@ -15,7 +15,7 @@ class S3Uploader
 
     public function upload_file()
     {
-var_dump($this->csvFile);
+//var_dump($this->csvFile);
         throw new \Exception('Failed upload');
         return 'Did it ...';
     }

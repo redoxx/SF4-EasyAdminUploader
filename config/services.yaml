@@ -7,6 +7,10 @@ parameters:
     app.path.campaign_codes: /uploads/campaigns/import-codes
     aws.credentials.key: "%env(AWS_KEY)%"
     aws.credentials.secret: "%env(AWS_SECRET)%"
+    aws.credentials.bucket: "%env(AWS_BUCKET)%"
+    aws.dynamodb.endpoint: "%env(DYNAMODB_ENDPOINT)%"
+    aws.dynamodb.table: "%env(DYNAMODB_CODE_TABLE_NAME)%"
+    aws.dynamodb.region: "%DYNAMODB_REGION%"
 
 services:
     # default configuration for services in *this* file
@@ -32,8 +36,13 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     App\EventListener\S3UploaderListner:
-        arguments: ['%aws.credentials.key%','%aws.credentials.secret%']
+        arguments: ['%aws.credentials.key%','%aws.credentials.secret%', '%aws.credentials.bucket%']
         #arguments: ["@=container.getParameter('aws.credentials.key')", "@=container.getParameter('aws.credentials.secret')"]
-        #arguments: ["%env(AWS_KEY)%", "%env(AWS_SECRET)%"]
         tags:
             - { name: doctrine.event_listener, event: postPersist }
+
+    # code validator service
+    App\Validator\Constraints\ContainsCodesValidator:
+        arguments: ['%aws.credentials.key%','%aws.credentials.secret%','%aws.credentials.bucket%','%aws.dynamodb.endpoint%','%aws.dynamodb.table%','%aws.dynamodb.region%']
+        tags:
+            - { name: validator.constraint_validator, alias: application_code_validator }

@@ -1,0 +1,25 @@
+{# templates/default/new.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}BNEE Redeem your code{% endblock %}
+
+{% block body %}
+
+	{% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <div class="container bnee-container">
+		<div class='header'>
+		</div>
+
+		<div class='content'>
+			{{ form_start(form) }}
+			{{ form_widget(form) }}
+			{{ form_end(form) }}
+		</div>
+
+		<div class='footer'>
+		</div>
+	</div>
+{% endblock %}

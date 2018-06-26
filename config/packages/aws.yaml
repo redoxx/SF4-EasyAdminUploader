@@ -12,3 +12,10 @@ aws:
         credentials: "@a_service"
     CloudSearchDomain:
         endpoint: https://search-with-some-subdomain.us-east-1.cloudsearch.amazonaws.com
+
+#services:
+#    a_service:
+#        class: Aws\Credentials\Credentials
+#        arguments:
+#            - a-different-fake-key
+#            - a-different-fake-secret

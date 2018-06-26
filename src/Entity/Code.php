@@ -3,9 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as CodeAssert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CodeRepository")
+ * @CodeAssert\ContainsCodes
  */
 class Code
 {
@@ -54,4 +58,5 @@ class Code
 
         return $this;
     }
+
 }

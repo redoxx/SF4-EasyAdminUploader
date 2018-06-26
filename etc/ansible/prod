@@ -1,0 +1,9 @@
+[prod-webservers]
+prod.m-virtual.local ansible_user=sshuser
+
+[prod-dbservers]
+prod.m-virtual.local ansible_user=sshuser
+
+[prod:children]
+prod-webservers
+prod-dbservers
