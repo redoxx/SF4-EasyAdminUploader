@@ -43,7 +43,7 @@ class CampaignController extends Controller
     	$form = $this->createFormBuilder($code)
             ->add('content', TextType::class, 
             	array(
-	            	'label' => 'Enter your code to earn rewards',
+	            	'label' => 'Enter your code to earn rewards !',
 	            	'required' => TRUE,
 	            	'attr' => array('placeholder' => ' XXXX-XXXX-XXXX-XXXX ')
             	)
@@ -61,7 +61,7 @@ class CampaignController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
         	// validate the code
         	$data = $form->getData();
-        	//var_dump($data->getContent());die;
+        	// redirect to the second step
         	return $this->redirectToRoute('downloadasset');
         }
 
@@ -79,8 +79,12 @@ class CampaignController extends Controller
     	$em = $this->getDoctrine()->getManager();
     	$campaign = $em->getRepository(campaign::class)->findLastOne();
 
+    	// @TODO get S3 signed link (or CloudFront)
+    	$assertlink = "https://www.7-zip.org/a/7za920.zip";
+    	
     	return $this->render('campaign/downloadasset.html.twig', array(
-            'campaign' => $campaign
+            'campaign' => $campaign,
+            'assertlink' => $assertlink
         ));
     }
     

@@ -16,11 +16,13 @@ class ContainsCodesValidator extends ConstraintValidator
 	private $awsendpoint;
 	private $dynamotable;
 	private $dbregion;
+	private $request;
+	private $logger;
 
 	/**
 	 * Construct
 	 */
-	public function __construct($awskey, $awssecret, $awsbucket, $awsendpoint, $dbtable, $dbregion)
+	public function __construct($awskey,$awssecret,$awsbucket,$awsendpoint,$dbtable,$dbregion,$logger,$request)
     {
         $this->awskey = $awskey;
         $this->awssecret = $awssecret;
@@ -28,6 +30,8 @@ class ContainsCodesValidator extends ConstraintValidator
         $this->awsendpoint = $awsendpoint;
         $this->dynamotable = $dbtable;
         $this->dbregion = $dbregion;
+        $this->logger = $logger;
+        $this->request = $request;
     }
 
     /**
@@ -36,63 +40,56 @@ class ContainsCodesValidator extends ConstraintValidator
     public function validate($code, Constraint $constraint)
     {
     	$value = $code->getContent();
+    	// string escape
+        $value = htmlspecialchars($value);
     	// empty value
     	if (strlen($value) == 0) {
-            $this->context->buildViolation($constraint->message)
-                ->setParameter('{{ string }}', 'value')
-                ->setParameter('{{ status }}', 'empty')
-                ->addViolation();
-        }
-        // string escape
-        $value = htmlspecialchars($value);
+    		$this->get_validation_message('value','empty',$constraint);
+        }else if (!preg_match('/^[a-zA-Z0-9]+$/', $value, $matches)) {
+        	// validate code format
+        	$this->get_validation_message($value,'invalid',$constraint);
+        }else{
+        	// @TODO check code on DynamoDB
+        	$result = $this->AWS_ckeck_code($value);
+	        if (empty($result)){
+	        	// @TODO uncomment ligne bellow after test
+	        	//$this->get_validation_message($value,'nonexistent',$constraint);
 
-        // validate code format
-        if (!preg_match('/^[a-zA-Z0-9]+$/', $value, $matches)) {
-            $this->context->buildViolation($constraint->message)
-                ->setParameter('{{ string }}', $value)
-                ->setParameter('{{ status }}', 'invalid')
-                ->addViolation();
-        }
-        // check code on DynamoDB DB
-        $result = $this->AWS_ckeck_code($value);
-        switch ($result) {
-        	case 'USED':
-        		# code...
-        		break;
-        	case 'NOTEXIST':
-        		break;
-        	default:
-        		# code...
-        		break;
-        }
+	        	// add log to be used by Fail2ban (cf Fail2ban config) 
+	        	$ipAddress = $this->request->getCurrentRequest()->getClientIp();
+        		$this->logger->error('[BNEE] Redeem code failed for IP: ' . $ipAddress);
 
+	        }else{
+	        	// @TODO retreive code detail: already user, validation date or .... 
+	        	//$result["Item"]
+	        }
+        }
+        
     }
 
     /**
      * Code Checking on AWS DynamoDB
+     * 
      * @param String $code_value
+     * @return Array $code_info
      */
     public function AWS_ckeck_code($code_value)
     {
+    	$code_info = [];
         /*
-           $sdk = new Aws\Sdk([
-            'endpoint'   => 'http://localhost:8000',
-            'region'   => 'us-west-2',
-            'version'  => 'latest'
+        $sdk = new Aws\Sdk([
+            'endpoint'	=> $this->awsendpoint,
+            'region'	=> $this->dbregion,
+            'version'	=> 'latest'
         ]);
 
         $dynamodb = $sdk->createDynamoDb();
         $marshaler = new Marshaler();
 
-        $tableName = 'Movies';
-
-        $year = 2015;
-        $title = 'The Big New Movie';
-
+        $tableName = $this->dynamotable;
         $key = $marshaler->marshalJson('
             {
-                "year": ' . $year . ', 
-                "title": "' . $title . '"
+                "code": "' . $code_value . '"
             }
         ');
 
@@ -103,14 +100,25 @@ class ContainsCodesValidator extends ConstraintValidator
 
         try {
             $result = $dynamodb->getItem($params);
-            print_r($result["Item"]);
+            $code_info = $result["Item"];
+            //print_r($result["Item"]);
 
         } catch (DynamoDbException $e) {
-            echo "Unable to get item:\n";
-            echo $e->getMessage() . "\n";
+            //echo "Unable to get item:\n";
+            //echo $e->getMessage() . "\n";
         }
         */
-        return TRUE;
+        return $code_info;
     }
+
+    /**
+	* validation message factory
+    */
+    public function get_validation_message($code,$text,$constraint){
+    	return $this->context->buildViolation($constraint->message)
+	                ->setParameter('{{ string }}', $code)
+	                ->setParameter('{{ status }}', $text)
+	                ->addViolation();
+	}
 
 }

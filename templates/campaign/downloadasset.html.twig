@@ -6,13 +6,19 @@
 {% block body %}
 
     <div class="container bnee-container">
-		<div class='header'>
+		<div class='header'>HEADER</div>
+		<div class='campaign_img'>
+			<img src="{{ asset('uploads/images/campaigns/'~campaign.image)}}" alt="{{campaign.title}}" />
 		</div>
-
 		<div class='content'>
+			<div class='campaign_text'>
+				{{campaign.promotext|raw }}
+			</div>
+
+			<a href="{{assertlink}}" class="btn btn-primary" role="button" download>Get your reward !</a>
+
 		</div>
 
-		<div class='footer'>
-		</div>
+		<div class='footer'>FOOTER</div>
 	</div>
 {% endblock %}

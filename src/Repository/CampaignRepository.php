@@ -26,6 +26,8 @@ class CampaignRepository extends ServiceEntityRepository
     public function findLastOne(): ?Campaign
     {
         return $this->createQueryBuilder('c')
+            ->andWhere('c.enabled > 0')
+            ->andWhere('c.draft = 0')
             ->orderBy('c.id', 'DESC')
             ->setMaxResults(1)
             ->getQuery()

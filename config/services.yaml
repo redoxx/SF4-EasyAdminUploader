@@ -10,7 +10,7 @@ parameters:
     aws.credentials.bucket: "%env(AWS_BUCKET)%"
     aws.dynamodb.endpoint: "%env(DYNAMODB_ENDPOINT)%"
     aws.dynamodb.table: "%env(DYNAMODB_CODE_TABLE_NAME)%"
-    aws.dynamodb.region: "%DYNAMODB_REGION%"
+    aws.dynamodb.region: "%env(DYNAMODB_REGION)%"
 
 services:
     # default configuration for services in *this* file
@@ -43,6 +43,6 @@ services:
 
     # code validator service
     App\Validator\Constraints\ContainsCodesValidator:
-        arguments: ['%aws.credentials.key%','%aws.credentials.secret%','%aws.credentials.bucket%','%aws.dynamodb.endpoint%','%aws.dynamodb.table%','%aws.dynamodb.region%']
+        arguments: ['%aws.credentials.key%','%aws.credentials.secret%','%aws.credentials.bucket%','%aws.dynamodb.endpoint%','%aws.dynamodb.table%','%aws.dynamodb.region%',"@logger","@request_stack"]
         tags:
             - { name: validator.constraint_validator, alias: application_code_validator }

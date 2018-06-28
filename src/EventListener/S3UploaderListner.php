@@ -3,6 +3,7 @@
 // src/EventListener/S3UploaderListner.php
 
 namespace App\EventListener;
+
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use App\Entity\CodesCsvFile;
 use Aws\S3\S3Client;
@@ -47,7 +48,7 @@ class S3UploaderListner
 			$this->logger->info($this->awskey);
 			$this->logger->info($this->awssecret);
 			/*
-			// upload file
+			// upload file into aws S3
 			try {
 			    $s3->putObject([
 			        'Bucket' => $this->bucket,
